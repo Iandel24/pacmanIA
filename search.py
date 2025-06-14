@@ -86,19 +86,75 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    
-    util.raiseNotDefined()
+    # We'll implement depth-first search using a stack.  Each element in the
+    # stack is a tuple of (state, path) where ``path`` is the sequence of actions
+    # taken to reach ``state`` from the start state.
+
+    frontier = util.Stack()
+    start_state = problem.getStartState()
+    frontier.push((start_state, []))
+    explored = set()
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        if state in explored:
+            continue
+        explored.add(state)
+
+        for successor, action, step_cost in problem.getSuccessors(state):
+            if successor not in explored:
+                frontier.push((successor, actions + [action]))
+
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # BFS uses a FIFO queue to explore states level by level
+    frontier = util.Queue()
+    start_state = problem.getStartState()
+    frontier.push((start_state, []))
+    explored = set([start_state])
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        for successor, action, step_cost in problem.getSuccessors(state):
+            if successor not in explored:
+                explored.add(successor)
+                frontier.push((successor, actions + [action]))
+
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Nodes are expanded in order of path cost from the start state
+    frontier = util.PriorityQueue()
+    start_state = problem.getStartState()
+    frontier.push((start_state, [], 0), 0)
+    explored = {}
+
+    while not frontier.isEmpty():
+        state, actions, cost = frontier.pop()
+
+        if state in explored and explored[state] <= cost:
+            continue
+        explored[state] = cost
+
+        if problem.isGoalState(state):
+            return actions
+
+        for successor, action, step_cost in problem.getSuccessors(state):
+            new_cost = cost + step_cost
+            frontier.push((successor, actions + [action], new_cost), new_cost)
+
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -109,8 +165,28 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # A* orders nodes by cost so far plus an admissible heuristic estimate
+    frontier = util.PriorityQueue()
+    start_state = problem.getStartState()
+    frontier.push((start_state, [], 0), heuristic(start_state, problem))
+    explored = {}
+
+    while not frontier.isEmpty():
+        state, actions, cost = frontier.pop()
+
+        if state in explored and explored[state] <= cost:
+            continue
+        explored[state] = cost
+
+        if problem.isGoalState(state):
+            return actions
+
+        for successor, action, step_cost in problem.getSuccessors(state):
+            new_cost = cost + step_cost
+            priority = new_cost + heuristic(successor, problem)
+            frontier.push((successor, actions + [action], new_cost), priority)
+
+    return []
 
 
 # Abbreviations
