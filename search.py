@@ -113,7 +113,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    # BFS uses a FIFO queue to explore states level by level
+main
     frontier = util.Queue()
     start_state = problem.getStartState()
     frontier.push((start_state, []))
@@ -134,7 +134,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    # Nodes are expanded in order of path cost from the start state
+ main
     frontier = util.PriorityQueue()
     start_state = problem.getStartState()
     frontier.push((start_state, [], 0), 0)
@@ -165,7 +165,7 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    # A* orders nodes by cost so far plus an admissible heuristic estimate
+main
     frontier = util.PriorityQueue()
     start_state = problem.getStartState()
     frontier.push((start_state, [], 0), heuristic(start_state, problem))
